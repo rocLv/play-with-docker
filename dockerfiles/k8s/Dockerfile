@@ -8,7 +8,7 @@ COPY ./kubernetes.repo /etc/yum.repos.d/
 RUN yum install -y kubectl-1.20.1 kubeadm-1.20.1 kubelet-1.20.1 \
     #&& mv -f /etc/systemd/system/kubelet.service.d/10-kubeadm.conf /etc/systemd/system/kubelet.service \
     && yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo \
-    && yum install -y docker-ce git bash-completion \
+    && yum install -y docker-ce git vim bash-completion \
     && sed -i -e '4d;5d;8d' /lib/systemd/system/docker.service \
     && yum clean all
 
@@ -25,11 +25,17 @@ COPY ./tokens.csv /etc/pki/tokens.csv
 COPY ./daemon.json /etc/docker/
 COPY ./resolv.conf.override /etc/
 COPY ./docker.service /usr/lib/systemd/system/
+COPY ./docker-prompt /usr/bin/
+COPY ./.vimrc /root/
 
 COPY motd /etc/motd
 
 RUN echo $'cat /etc/motd \n\
-export PS1="[\h \W]$ "' >> /root/.bash_profile
+export PS1="\e[1m\e[31m[\h] <NX> \e[32m($(docker-prompt)) \e[34m\u@$(hostname -i)\e[35m \w\e[0m\n$ "' >>/root/.bash_profile
+
+RUN echo 'alias k=kubectl' >> /root/.bash_profile
+RUN echo 'alias vi=vim'    >> /root/.bash_profile
+RUN echo 'export do="--dry-run=client -o yaml"' >> /root/.bash_profile
 
 RUN echo 'source <(kubectl completion bash)' >>~/.bashrc \
     && kubectl completion bash >> /etc/bash_completion.d/kubectl

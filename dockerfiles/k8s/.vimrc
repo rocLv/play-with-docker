@@ -1,0 +1,9 @@
+syntax on
+set autoindent
+set expandtab
+set number
+set shiftwidth=2
+set softtabstop=2
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+set termencoding=utf-8
+set encoding=utf-8

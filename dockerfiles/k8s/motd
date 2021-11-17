@@ -1,28 +1,30 @@
 
-                          WARNING!!!!
+                         警告⚠️ !!!!
 
- This is a sandbox environment. Using personal credentials
- is HIGHLY! discouraged. Any consequences of doing so, are
- completely the user's responsibilites.
+ 这是沙盒环境。请不要使用个人认证信息！由此导致的个人密码
+ 泄露问题，均由您个人负责。
 
- You can bootstrap a cluster as follows:
+ 您可以使用如下命令初始化Kubernetes集群。
 
- 1. Initializes cluster master node:
+ 1. 初始化Master 节点：
 
  kubeadm init --apiserver-advertise-address $(hostname -i) --pod-network-cidr 10.5.0.0/16
-    
 
- 2. Initialize cluster networking:
+ 2. 初始化集群网络：
 
 kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter.yaml
 
+ 3. Untaint Master Node：
 
- 3. (Optional) Create an nginx deployment:
+ kubectl taint node mymasternode node-role.kubernetes.io/master:NoSchedule-
+
+ 这样您就可以在Master节点部署Pod了。
+
+ 4. (可选) 创建nginx deployment：
 
  kubectl apply -f https://raw.githubusercontent.com/kubernetes/website/master/content/en/examples/application/nginx-app.yaml
 
 
-                          The PWK team.
-
+                        奈学教育
 
 
